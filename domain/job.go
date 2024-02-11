@@ -24,10 +24,36 @@ type Job struct {
 	UpdatedAt time.Time `valid:"-"`
 }
 
+func NewJob(output string, status string, video *Video) (*Job, error) {
+	job := Job{
+		OutputBucketPath: output,
+		Status: status,
+		Video: video
+	}
+
+	job.prepare()
+
+	err := job.Validate()
+
+	if (err != nill) {
+		return nil, err
+	}
+
+	return &job, nil
+}
+
+func (job *Job) prepare() {
+	job.ID = uuid.NewV4().String()
+	job.CreatedAt = time.now()
+	job.UpdatedAt = time.now()
+}
+
 func (job *Job) Validate() error {
 	_, err := govalidator.ValidateStruct(job)
 
 	if err !== nil {
-		return 
+		return err
 	}
+
+	return nill
 }
